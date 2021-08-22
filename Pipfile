@@ -37,6 +37,7 @@ tzlocal = "==2.1"
 ujson = "==4.0.2"
 urllib3 = "==1.25.10"
 "zope.interface" = "==5.1.0"
+bs4 = "*"
 
 [dev-packages]
 
