@@ -7,7 +7,8 @@ from reporter import reporter
 from config import BINANCE_KEY, BINANCE_SCR, logger
 from utils import (MonitoringStartError,
                    restore_traded_asset_amounts,
-                   set_price_monitor)
+                   set_price_monitor,
+                   stop_trading)
 
 
 def main():
@@ -42,5 +43,5 @@ if __name__ == "__main__":
         logger.info("Script stopped manually!")
         reporter.log_current_account_info(account)
         reporter.log_traded_asset_amounts()
-        stop_monitoring()
+        stop_trading()
 

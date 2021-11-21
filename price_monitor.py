@@ -1,4 +1,4 @@
-from binance.websockets import BinanceSocketManager
+from binance.streams import ThreadedWebsocketManager
 from binance.enums import *
 from twisted.internet import reactor
 
@@ -11,10 +11,9 @@ class PriceMonitor:
 
     def __init__(self, client):
 
-        self._conn_keys = []
         self._asset_price_data = {}
         self._assets_traded = ASSETS_TO_TRADE
-        self._socket_mgr = BinanceSocketManager(client)
+        self._socket_mgr = ThreadedWebsocketManager()
         self._price_statistics = PriceStatistics(client)
         self._total_errors = 0
 
@@ -27,20 +26,22 @@ class PriceMonitor:
 
         logger.info("Start monitoring prices...")
 
-        for asset in self._assets_traded:
-            conn_key = self._socket_mgr.start_symbol_ticker_socket(asset, self._price_msg_handler)
-            self._conn_keys.append(conn_key)
-
-        if all(self._conn_keys):
+        try:
             self._socket_mgr.start()
-        else:
-            raise MonitoringStartError("Failed to start symbol ticker sockets!")
+
+            for asset in self._assets_traded:
+                self._socket_mgr.start_symbol_ticker_socket(callback=self._price_msg_handler, symbol=asset)
+
+            self._socket_mgr.join()
+
+        except:
+            raise MonitoringStartError("Failed to start socket!")
 
     def stop_monitoring(self):
         """Close the websocket connections and stop monitoring"""
 
         logger.info("Stop monitoring prices...")
-        self._socket_mgr.close()
+        self._socket_mgr.stop()
 
         # properly terminate WebSocket
         reactor.stop()
