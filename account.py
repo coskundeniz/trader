@@ -1,19 +1,15 @@
-from binance.client import Client
-
 from config import (logger,
-                    BINANCE_KEY,
-                    BINANCE_SCR,
                     ASSETS_OWNED,
                     WALLET_BALANCES,
                     INVESTMENT)
-from utils import get_current_dollar_exchange_rate
+from utils import get_current_dollar_exchange_rate, get_client
 
 
 class Account:
 
     def __init__(self):
 
-        self.client = Client(BINANCE_KEY, BINANCE_SCR)
+        self.client = get_client()
         self.assets = ASSETS_OWNED
         self.asset_balances = {}
         self._benefit = 0

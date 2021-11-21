@@ -6,11 +6,11 @@ from price_evaluator import PriceEvaluator
 
 class PriceStatistics:
 
-    def __init__(self, client):
+    def __init__(self):
 
         self._traded_asset_stats = {}
         self._stats_read_lock = Lock()
-        self._evaluator = PriceEvaluator(self, client)
+        self._evaluator = PriceEvaluator(self)
 
     def process_price(self, asset_price_data):
         """Process asset price data

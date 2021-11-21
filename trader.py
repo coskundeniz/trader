@@ -1,11 +1,11 @@
-from binance.client import Client
 from twisted.internet.error import ReactorNotRunning
 
 from account import account
 from price_monitor import PriceMonitor
 from reporter import reporter
-from config import BINANCE_KEY, BINANCE_SCR, logger
+from config import logger
 from utils import (MonitoringStartError,
+                   get_client,
                    restore_traded_asset_amounts,
                    set_price_monitor,
                    stop_trading)
@@ -13,7 +13,7 @@ from utils import (MonitoringStartError,
 
 def main():
 
-    client = Client(BINANCE_KEY, BINANCE_SCR)
+    client = get_client()
 
     logger.info(f"System status: {client.get_system_status()['msg'].upper()}")
 
@@ -23,7 +23,7 @@ def main():
     reporter.log_traded_asset_amounts()
 
     try:
-        price_monitor = PriceMonitor(client)
+        price_monitor = PriceMonitor()
         set_price_monitor(price_monitor)
         price_monitor.start_monitoring()
     except MonitoringStartError as err:

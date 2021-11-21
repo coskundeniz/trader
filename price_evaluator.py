@@ -2,20 +2,20 @@ from time import sleep
 from threading import Thread
 
 from config import logger, ASSETS_TO_TRADE
-from utils import CheckInterval
+from utils import CheckInterval, get_client
 from persistant_stats import PersistantStats
 from strategy.factory import StrategyFactory
 
 
 class PriceEvaluator:
 
-    def __init__(self, price_statistics, client):
+    def __init__(self, price_statistics):
 
         self._price_statistics = price_statistics
         self._persistant_stats = PersistantStats()
         self._strategy_factory = StrategyFactory()
 
-        self._save_initial_prices(client)
+        self._save_initial_prices()
         self._start_evaluators()
 
     def evaluate_ten_seconds_stats(self):
@@ -179,13 +179,10 @@ class PriceEvaluator:
 
         return round(change_percent, 3)
 
-    def _save_initial_prices(self, client):
-        """Save initial price data
+    def _save_initial_prices(self):
+        """Save initial price data"""
 
-        :type client: binance.client.Client
-        :param client: Binance API client instance
-        """
-
+        client = get_client()
         initial_asset_prices = {}
 
         for asset_symbol in ASSETS_TO_TRADE:

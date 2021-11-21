@@ -2,10 +2,13 @@ import os
 import json
 import requests
 from enum import Enum
+
 from bs4 import BeautifulSoup
+from binance.client import Client
 from twisted.internet.error import ReactorNotRunning
 
 from config import (logger,
+                    BINANCE_KEY, BINANCE_SCR,
                     INITIAL_USDT_INVESTMENT,
                     ASSETS_TO_TRADE,
                     TRADED_ASSET_AMOUNTS,
@@ -13,6 +16,7 @@ from config import (logger,
 
 
 price_monitor_instance = None
+client = None
 
 class MonitoringStartError(Exception):
     pass
@@ -209,6 +213,16 @@ def stop_trading():
     logger.info("Stop trading and exit!")
 
     raise SystemExit(1)
+
+
+def get_client():
+
+    global client
+
+    if client is None:
+        client = Client(BINANCE_KEY, BINANCE_SCR)
+
+    return client
 
 
 def get_current_dollar_exchange_rate():

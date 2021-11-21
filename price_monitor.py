@@ -9,12 +9,12 @@ from utils import MonitoringStartError
 
 class PriceMonitor:
 
-    def __init__(self, client):
+    def __init__(self):
 
         self._asset_price_data = {}
         self._assets_traded = ASSETS_TO_TRADE
         self._socket_mgr = ThreadedWebsocketManager()
-        self._price_statistics = PriceStatistics(client)
+        self._price_statistics = PriceStatistics()
         self._total_errors = 0
 
     def start_monitoring(self):

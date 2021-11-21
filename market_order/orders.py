@@ -1,8 +1,8 @@
-from binance.client import Client
 from binance.exceptions import (BinanceAPIException,
                                 BinanceOrderException)
-from config import logger, BINANCE_KEY, BINANCE_SCR
-from utils import update_traded_asset_amounts
+
+from config import logger
+from utils import update_traded_asset_amounts, get_client
 from executor import order_executor
 from reporter import reporter
 
@@ -13,7 +13,7 @@ class MarketOrder:
 
         self.symbol = None
         self.amount = 0.0
-        self.client = Client(BINANCE_KEY, BINANCE_SCR)
+        self.client = get_client()
 
     def set_parameters(self, symbol=None, amount=None, current_price=None):
         """Perform determined strategy according to price change percents
